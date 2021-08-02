@@ -221,11 +221,6 @@ def start():
         if cv.waitKey(1) & 0xFF == ord('q'):
             break
 
-    # After the loop release the cap object
-    # img= img.release()
-    # cv.imshow("Face", img.release())
-
-    # Destroy all the windows
     ts = time.time()
     date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
@@ -254,6 +249,109 @@ def clearscr():
 clearoutput= Button(root, text=' Clear Screen ', command=clearscr, bg='purple', fg='white',
               font=('helvetica', 12, 'bold'))
 clearoutput.place(x=470, y=600)
+
+path = 'your path/ '
+def updatedata():
+    new = Toplevel(root)
+    new.title("Remove Name and Roll Number: ")
+    # sets the geometry of toplevel
+    new.geometry("500x500")
+
+    pas = 'lakha'
+
+    entx = Entry(new, font=9, width=25, highlightthickness=2)
+    entx.config(highlightbackground="red", highlightcolor="red")
+    entx.place(x=10, y=50)
+
+    def cpass():
+        if pas == entx.get():
+            prog()
+            entx.destroy()
+            btnx.destroy()
+            btnc.destroy()
+
+        else:
+            entx.delete(0, END)
+            entx.config(fg="blue", width=25, highlightbackground="red", highlightcolor="red")
+            entx.insert(END, 'Wrong Password! ')
+
+    def cler():
+        entx.delete(0, END)
+
+    btnx = Button(new, text=" Submit ", command=cpass)
+    btnx.config(bg='orange', fg='white', font=('helvetica', 10, 'bold'))
+    btnx.place(x=30, y=100)
+    btnc = Button(new, text=" Clear ", command=cler)
+    btnc.config(bg='orange', fg='white', font=('helvetica', 10, 'bold'))
+    btnc.place(x=110, y=100)
+
+    def prog():
+        new.title('Face recognition model attendence system')
+
+        # A Label widget to show in toplevel
+        Label(new, text=" Face Recognition Model Updation Records: ").place(x=100, y=10)
+        lblr = Label(new, text='Enter Roll No. :', font='ariel 12')
+        lblr.config(font=('helvetica', 10, 'bold'), bg='lightblue')
+        lblr.place(x=20, y=52)
+        global entr
+        entr = Entry(new, font=9, width=25, highlightthickness=2)
+        entr.config(highlightbackground="red", highlightcolor="red")
+        entr.place(x=190, y=50)
+
+        global entname
+        lblname = Label(new, text='Enter Name to remove: ', font='ariel 12')
+        lblname.config(font=('helvetica', 9, 'bold'), bg='lightblue')
+        lblname.place(x=20, y=102)
+        entname = Entry(new, font=9, width=25, highlightthickness=2)
+        entname.config(highlightbackground="red", highlightcolor="red")
+        entname.place(x=190, y=100)
+
+        def deldata():
+            enttrr = entr.get()
+            entnm = entname.get()
+            print(enttrr)
+
+            for i in os.listdir(path):
+                if enttrr == i:
+                    for fsub in os.listdir(path + '\{}'.format(i)):
+                        if fsub == entnm:
+                            rmpath = os.path.join(path, str(enttrr))
+                            shutil.rmtree(rmpath)
+                            messagebox.showinfo("Completed",
+                                                "Data Deleted Sucessfully.." )
+                            entr.delete(0,END)
+                            entname.delete(0, END)
+                            # print('Record and data sucessfully deleted:')
+                        else:
+                            messagebox.showinfo("Wrong Name! ", "Data Not Exist in our Record..")
+                            # print('Not exist Wong Name! ')
+                            entr.delete(0, END)
+                            entname.delete(0, END)
+
+                else:
+                    messagebox.showinfo("Wrong Roll No. !! ", "Data Doesn't Exist in our Record..")
+                    # print('Not exist Wong Roll No. : ')
+                    entr.delete(0, END)
+                    entname.delete(0, END)
+
+        btn = Button(new, text=" Update Records ", command=deldata)
+        btn.config(bg='orange', fg='white', font=('helvetica', 10, 'bold'))
+        btn.place(x=160, y=240)
+
+        def ext():
+            new.destroy()
+
+        exit = Button(new, text='Close', command=ext, bg='brown', fg='white',
+                      font=('helvetica', 12, 'bold'))  # # Start Tk's event loop
+        exit.place(x=435, y=455)
+
+
+# else:
+#     print('password mismatched, Try again: ')
+btndelr = Button(root, text=" Delete a Record ", command= updatedata)
+btndelr.config(bg='orange', fg='white', font=('helvetica', 12, 'bold'))
+btndelr.place(x=300, y=600)
+
 
 def exit():
     MsgBox = messagebox.askquestion('Exit Application', 'Are you sure, you want to exit the application ?',
